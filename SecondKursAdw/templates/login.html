@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ super() }}
+<form action="{{url_for('login')}}" method="post" class="form-contact">
+    <div style="text-align:center;">
+<h1 class="h3 mb-3 fw-normal">Вход</h1>
+<input type="text" name="login" value=""  size="22" placeholder = "Логин" requied /> <br>
+<input type="password" name="psw" value="" size="22" placeholder = "Пароль" requied /> <p></p>
+<input type="submit" value="Войти в профиль" class="btn-lg btn btn-success "/>
+</div>
+</form>
+{% endblock %}

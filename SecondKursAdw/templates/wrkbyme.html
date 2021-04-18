@@ -1,0 +1,42 @@
+{% extends 'baseSecond.html' %}
+ 
+{% block content %}
+{{ super() }}
+<form action="{{url_for('showWorksByMe', user_id = current_user.get_id())}}" method="post" class="form-contact">
+    <table class="table table-hover table-success table-striped table-sm">
+        <thead class="table-dark">
+            <tr>
+            <th scope="col">Текущие задания  </th>
+            <th scope="col">Ссылка</th>
+            </tr>
+        </thead>
+        <tbody>
+                {% for ts in tasksBeforeDeadline %}
+                <tr>
+                    <th scope="row">{{ts.NameOfWork}}</th>
+                    <td><a href="{{url_for('essayResp', user_id = current_user.get_id(), post_id = ts.WorkID)}}" class="btn btn-outline-dark">Посмотреть</a></td>
+                </tr>
+                {% endfor %}
+        </tbody>
+    </table>
+    <table class="table table-hover table-success table-striped table-sm">
+        <thead class="table-dark">
+            <tr>
+            <th scope="col">Прошедшие задания</th>
+            <th scope="col">Ссылка</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ts in tasksAfterDeadline %}
+        <tr>
+            <th scope="row">{{ts.NameOfWork}}</th>
+            <td><a href="{{url_for('essayResp', user_id = current_user.get_id(), post_id = ts.WorkID)}}" class="btn btn-outline-dark">Посмотреть</a></td>
+        </tr> 
+        {% endfor %}
+    </tbody>
+</table>
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a href = "{{url_for('profile', user_id = current_user.get_id())}}" class="btn btn-sm btn-outline-dark me-md-2">Вернуться назад</a>
+    </div>
+</form>
+{% endblock %}

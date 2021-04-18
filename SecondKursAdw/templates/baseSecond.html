@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+    <head>
+        <!--<link type = "text/css" rel="stylesheet" href="style.css">-->
+        <!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+        <meta charset="UTF-8">
+    {% block title -%}
+    {% if title -%}
+        <title>Adwiser - {{ title }}</title>
+    {% else %}
+        <title>Adwiser</title> 
+    {% endif %}
+    {% endblock %}
+      </head> 
+
+    <body style="background-color:#DCDCDC;">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="{{url_for('login')}}">Adwiser</a>
+              </button>
+                <form class="d-flex">
+                    <a href = "{{url_for('login')}}" class="btn btn-outline-light">Профиль</a> &nbsp;
+                    <a href = "{{url_for('logout')}}" class="btn btn-outline-light">Выход из профиля</a>
+                </form>
+            </div>
+        </nav>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-dark" role="alert">
+{{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    {% block content -%}
+        <div class="clear"></div>
+        <div class="content">
+        <!-- Тут добавить наименование пользователя, выход ИЛИ вход в аккаунт -->
+        <!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+        {% endblock -%}    
+        </div>
+    </body>
+</html>

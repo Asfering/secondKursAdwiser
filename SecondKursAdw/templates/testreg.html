@@ -1,0 +1,15 @@
+{% extends 'baseSecond.html' %}
+ 
+{% block content %}
+{{ super() }}
+<form action="{{url_for('RegTest', user_id = current_user.get_id())}}" method="post" class="form-contact">
+<div style="text-align:center;">
+<h1 class="h3 mb-3 fw-normal">Заполнение нового пользователя</h1>
+<input type="text" name="login" size="56" placeholder = "Логин" value="" requied /> <br>
+<input type="password" name="psw" size="56" placeholder = "Пароль" value="" requied /><br>
+<input type="password" name="psw2" size="56" placeholder = "Повтор пароля" value="" requied /><br><p></p>
+<input type="submit" class="btn btn-success" value="Регистрация нового пользователя" />
+<a href = "{{url_for('profile', user_id = current_user.get_id())}}"  class="btn btn-secondary">Назад в профиль</a>
+</div>
+</form>
+{% endblock %}

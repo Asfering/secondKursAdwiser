@@ -1,0 +1,22 @@
+{% extends 'baseSecond.html' %}
+ 
+{% block content %}
+{{ super() }}
+<form action="{{url_for('createWork', user_id = current_user.get_id())}}" method="post" class="form-contact">
+    <div style="text-align:left;" >
+<h1 class="h2 mb-3 fw-normal">Основные поля</h1>  
+<input type="text" size="46" name="nameOfWork" value="" placeholder = "Наименование работы" requied /> <br>
+<input type="text" size="46" name="numberOfGroup" value="" placeholder = "ID группы" requied /> <br>
+<h1 class="h2 mb-3 fw-normal">Срок сдачи</h1>
+<input type="text" name="year" value="2021" requied />  <br>
+<input type="text" name="month" placeholder = "Месяц" value="" requied /> 
+<input type="text" name="day" placeholder = "День" value="" requied /> <br>
+<input type="text" name="hour" placeholder = "Час" value="" requied /> 
+<input type="text" name="minute" placeholder = "Минута" value="" requied />  <br>
+<h1 class="h2 mb-3 fw-normal">Задание</h1>
+<p><textarea name="Task"rows=20 cols=200></textarea></p>
+<input class="btn btn-success btn-lg" type="submit" value="Добавить задание" />
+<a href = "{{url_for('profile', user_id = current_user.get_id())}}" class="btn btn-secondary btn-lg">Назад в профиль</a>
+    </div>
+</form>
+{% endblock %}

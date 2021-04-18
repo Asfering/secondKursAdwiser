@@ -1,0 +1,16 @@
+{% extends 'baseSecond.html' %}
+ 
+{% block content %}
+{{ super() }}
+<form action="{{url_for('CreateProfessor', user_id = current_user.get_id())}}" method="post" class="form-contact">
+    <div style="text-align:center;">
+    <h1 class="h3 mb-3 fw-normal">Заполнение нового преподавателя</h1>
+<input type="text" name="fstName" value="" size="51" placeholder = "Имя" requied /> <br>
+<input type="text" name="scdName" value="" size="51" placeholder = "Фамилия" requied /> <br>
+<input type="text" name="thrName" value="" size="51" placeholder = "Отчество" /> <br>
+<input type="text" name="userId" value="" size="51" placeholder = "Номер пользователя" requied /> <br> <p></p>
+<input type="submit" class="btn btn-success" value="Добавление преподавателя" /> &nbsp;
+<a href = "{{url_for('profile', user_id = current_user.get_id())}}" class="btn btn-secondary">Назад в профиль</a>
+</div>  
+</form>
+{% endblock %}

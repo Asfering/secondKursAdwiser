@@ -1,0 +1,27 @@
+{% extends 'baseSecond.html' %}
+ 
+{% block content %}
+{{ super() }}
+<form action="{{url_for('showTask', user_id = current_user.get_id(), id_post = post)}}" method="post" class="form-contact">
+
+
+    <h1 class="h3 mb-3 fw-normal">Задание - {{ task }}</h1>
+{% if eu %}
+<p><textarea name="sea"rows=14 cols=130 readonly>{{sea}}</textarea> &nbsp;
+<textarea name="rea"rows=14 cols=130 readonly>{{rea}}</textarea></p>
+<h1 class="h5 mb-3 fw-normal">Преподаватель: {{professorHTML}} </h1> 
+<h1 class="h5 mb-3 fw-normal">Оценка: {{ge}}</h1>
+<h1 class="h5 mb-3 fw-normal">Комментарий преподавателя: {{ce}}</h1>
+<h1 class="h5 mb-3 fw-normal">Дата начала: {{DateOfBeginHTML}} | Конец срока сдачи: {{DateOfEndHTML}}</h1>
+<h1 class="h5 mb-3 fw-normal">Дата загрузки: {{doue}}</h1>
+{% else %}
+<p><textarea name="sea"rows=14 cols=100>{{sea}}</textarea></p>
+<h1 class="h5 mb-3 fw-normal">Дата начала: {{DateOfBeginHTML}} | Конец срока сдачи: {{DateOfEndHTML}}</h1>
+{% endif %}
+{% if tf and not eu %}
+<input type="submit" value="Добавить ответ на задание" class="btn btn-success" />
+{% endif %}
+<a href = "{{url_for('profile', user_id = current_user.get_id())}}" class="btn btn-secondary">Назад в профиль</a>
+</form>
+
+{% endblock %}
