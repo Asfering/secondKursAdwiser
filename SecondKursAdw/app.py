@@ -2,7 +2,6 @@
 from flask import Flask, render_template, request, g, flash, abort, redirect, url_for, make_response 
 import os
 import pyodbc
-import flask_wtf
 # библиотека с авторизацией
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user, UserMixin
 # подключаем остальные классы
@@ -41,7 +40,7 @@ def before_request():
     global conn
     conn = pyodbc.connect(
     "Driver={ODBC Driver 17 for SQL Server};"
-    "Server=ZHEREBEC;"
+    "Server=DESKTOP-60EDRVH\SQLEXPRESS;"
     "Database=AdwiserLogDataBase;"
     "Trusted_Connection=yes;")
 
@@ -57,7 +56,6 @@ def close_db(error):
 @login_manager.user_loader
 def load_user(user_id):
     '''Загрузка пользователя'''
-    print("load_user")
     return UserLogin().fromDb(user_id, mainCursor)
 
 @app.route('/profile/<user_id>/registration', methods=["POST", "GET"])
@@ -89,7 +87,6 @@ def AddUser(login, psw):
         mainCursor.execute(f"SELECT Users.UserLogin FROM Users WHERE UserLogin LIKE '{login}';")
         res = mainCursor.fetchone()
         if res is not None:
-            print ("Пользователь с таким логином уже существует")   
             return False
         # Добавляем в БД
         mainCursor.execute("SET IDENTITY_INSERT Users ON")
@@ -153,12 +150,10 @@ def AddStudent(name, lastName, middleName, userId, groupId):
         mainCursor.execute(f"SELECT Students.StudentID FROM Students WHERE UserID LIKE {userId}") 
         res = mainCursor.fetchone()
         if res is not None:
-            print ("Пользователь с таким login/password уже существует (student)")
             return False
         mainCursor.execute(f"SELECT Professors.ProfessorID FROM Professors WHERE UserID LIKE {userId}")
         res2 = mainCursor.fetchone()
         if res2 is not None:
-            print ("Пользователь с таким login/password уже существует (professor)")
             return False
         # Добавление в бд
         mainCursor.execute("SET IDENTITY_INSERT Students ON")
@@ -213,12 +208,10 @@ def AddProfessor(name, lastName, middleName, userId):
         mainCursor.execute(f"SELECT Students.StudentID FROM Students WHERE UserID LIKE {userId}") 
         res = mainCursor.fetchone()
         if res is not None:
-            print ("Пользователь с таким login/password уже существует (student)")
             return False
         mainCursor.execute(f"SELECT Professors.ProfessorID FROM Professors WHERE UserID LIKE {userId}")
         res2 = mainCursor.fetchone()
         if res2 is not None:
-            print ("Пользователь с таким login/password уже существует (professor)")
             return False
         # добавление преподавателя в бд
         mainCursor.execute("SET IDENTITY_INSERT Professors ON")
@@ -259,7 +252,6 @@ def login():
         if user and psw[0] == request.form['psw']:  # если совпадают пароль и логин
             userlogin = UserLogin().create(user)    # авторизация пользователя, запоминаем ID текущего пользователя для дальнейшей работы
             login_user(userlogin)   # передаем объект класса UserLogin в login_user
-            print(f"Вход выполнен успешно. Текущий пользователь: {request.form['login']}")
             return redirect(url_for('profile', user_id = current_user.get_id()))    # переход в профиль
         flash("Неверная пара логин/пароль", "error") # Иначе: Сообщение пользователю
    
@@ -431,10 +423,8 @@ def CreateEssayResponce(UserId, idPost, stdResponce):
 @login_required
 def showWorksByMe(user_id):
     '''Просмотр заданий, выданных преподавателем'''
-    if current_user.is_professor(mainCursor):   # если пользователь препод
-        print(current_user.id_of_professor(mainCursor))
-    else:
-        flash("У вас нет прав доступа к данной странице", "error") # Сообщение пользователю
+    if not current_user.is_professor(mainCursor):   # если пользователь не препод
+        flash("У вас нет прав доступа к данной странице", "error")  # Сообщение пользователю
         return redirect(url_for('login'))
     return render_template("wrkbyme.html", title="Выданные мной задания", tasksBeforeDeadline=fDataBase.getTaskAnnonceByMe(mainCursor, current_user.id_of_professor(mainCursor)),\
         tasksAfterDeadline = fDataBase.getTaskAfterDeadline(mainCursor, current_user.id_of_professor(mainCursor)))
@@ -534,6 +524,5 @@ if __name__ == '__main__':
         PORT = int(os.environ.get('SERVER_PORT', '5555'))
     except ValueError:
         PORT = 5555
-    app.run(HOST, PORT, debug)
-
+    app.run(HOST, PORT)
     
