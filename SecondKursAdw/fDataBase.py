@@ -22,18 +22,14 @@ class fDataBase:
             print("Ошибка получения пароля пользователя - getUserPassword")
         return False
 
-
     def getUserByLogin(mainCursor, login):
         '''Функция получения пользователя по логину'''
         try:
             mainCursor.execute(f"SELECT * FROM Users WHERE UserLogin LIKE '{login}';")
             res = mainCursor.fetchone()
-            if not res:
-                flash("Пользователя не существует", "error")
-                return redirect(url_for('registration', user_id = current_user.get_id()))
             return res
         except:
-            print("Ошибка добавления пользователя в БД - getUserByLogin")
+            print("Ошибка получения пароля пользователя - getUserByLogin")
         return False
 
     def getProffesorByTask(mainCursor, id_post):
