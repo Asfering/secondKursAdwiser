@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Set these paths appropriately
+
+BIN="/f/python/ADWISER/website/tt/bin"
+CMD="/f/python/ADWISER/website/tt/cmd"
+LIB="/f/python/ADWISER/website/tt/lib"
+
+OPTIONS="-token -lemma -sgml"
+
+TOKENIZER=${CMD}/utf8-tokenize.perl
+ABBR_LIST=${LIB}/swahili-abbreviations
+TAGGER=${BIN}/tree-tagger
+PARFILE=${LIB}/swahili.par
+
+$TOKENIZER -a $ABBR_LIST $* |
+$TAGGER $OPTIONS $PARFILE

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Set these paths appropriately
+
+BIN="/f/python/ADWISER/website/tt/bin"
+CMD="/f/python/ADWISER/website/tt/cmd"
+LIB="/f/python/ADWISER/website/tt/lib"
+
+OPTIONS="-token -lemma -sgml"
+
+TAGGER=${BIN}/tree-tagger
+TOKENIZER=${CMD}/utf8-tokenize.perl
+PARFILE=${LIB}/slovak.par
+
+$TOKENIZER $* |
+$TAGGER $OPTIONS $PARFILE
