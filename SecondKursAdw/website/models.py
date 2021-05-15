@@ -1,10 +1,13 @@
 # coding=utf-8
 import re
 import treetaggerwrapper
+import pathlib
+import os
+os.chdir(r'F:\python\secondKursAdwiser\SecondKursAdw\website')
 
 # examples of tags: http://www.natcorp.ox.ac.uk/docs/bnc2guide.htm#pm
 def models(user_input):
-    tagger = treetaggerwrapper.TreeTagger(TAGLANG='en', TAGDIR='tt/')
+    tagger = treetaggerwrapper.TreeTagger(TAGLANG='en', TAGDIR=r'F:\python\secondKursAdwiser\SecondKursAdw\website\tt')
 
     def preprocessing(text):
         '''

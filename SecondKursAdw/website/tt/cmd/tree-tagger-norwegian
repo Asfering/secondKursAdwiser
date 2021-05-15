@@ -2,9 +2,9 @@
 
 # Set these paths appropriately
 
-BIN="/f/python/ADWISER/website/tt/bin"
-CMD="/f/python/ADWISER/website/tt/cmd"
-LIB="/f/python/ADWISER/website/tt/lib"
+BIN="/f/python/secondKursAdwiser/SecondKursAdw/website/tt/bin"
+CMD="/f/python/secondKursAdwiser/SecondKursAdw/website/tt/cmd"
+LIB="/f/python/secondKursAdwiser/SecondKursAdw/website/tt/lib"
 
 OPTIONS="-token -lemma -sgml"
 

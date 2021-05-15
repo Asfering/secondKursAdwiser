@@ -1,6 +1,6 @@
 @echo off
 
-set TAGDIR=C:\TreeTagger
+set TAGDIR=F:\python\secondKursAdwiser\SecondKursAdw\website\tt
 
 set BIN=%TAGDIR%\bin
 set CMD=%TAGDIR%\cmd

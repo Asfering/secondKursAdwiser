@@ -1,14 +1,16 @@
 # библиотеки
-from flask import Flask, render_template, request, g, flash, abort, redirect, url_for, make_response
-import os
-import pyodbc
-# библиотека с авторизацией
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user, UserMixin
-# подключаем остальные классы
-from fDataBase import fDataBase
-from UserLogin import UserLogin
-import random
 import datetime
+import random
+
+import pyodbc
+from flask import Flask, render_template, request, g, flash, abort, redirect, url_for, Markup
+# библиотека с авторизацией
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+
+# подключаем остальные классы
+from SecondKursAdw.website.models import models
+from UserLogin import UserLogin
+from fDataBase import fDataBase
 
 app = Flask(__name__)
 CSRF_ENABLED = True
@@ -418,8 +420,9 @@ def checkonwarnings(user_id):
     sea = ""
     if request.method == "POST":
         if len(request.form['sea']) > 10:  # простая проверка
-            rea = request.form['sea']  # как заглушка, встанет адвайзер
             sea = request.form['sea']
+            rea, comments = annotate_print(sea)
+            rea = Markup(rea)  # как заглушка, встанет адвайзер
             gradeRandom = random.randint(1, 10)  # как заглушка, встанет адвайзер
         else:
             flash("Длина исходного текста меньше 10 символов")  # Сообщение пользователю
@@ -571,6 +574,39 @@ def http_500_handler(error):
     return "<p>HTTP 500 Error Encountered</p>", 500
 
 
+def annotate(text):
+    ann_strings = models(text)
+    tokens_soup = []
+    comments = {}
+    for i, ann in enumerate(ann_strings):
+        tokens_soup.append([ann[0], int(ann[1])])
+        if ann[2]:
+            comments["comment"+str(i)] = ann[2]
+    return tokens_soup, comments
+
+
+def annotate_print(text):
+    tokens_soup, comments = annotate(text)
+    for token in tokens_soup:
+         text = text.replace(token[0], chr(8), 1)
+    for k, token in enumerate(tokens_soup):
+        entry = ""
+        if token[1] == 1:
+            entry += '<div class="duo"'
+            if "comment"+str(k) in comments:
+                entry += ' id="' + "comment"+str(k) + 'link"'
+                entry += ' onclick="popupbox(event,'
+                entry += "'" + "comment"+str(k) + "'" + ')">'
+            else:
+            	entry += '>'
+        entry += token[0]
+        if token[1] == 1:
+            entry += '</div>'
+        text = text.replace(chr(8), entry, 1)
+    text = text.replace("\n", "<br>")
+    return text, comments
+
+
 # Запуск сервера
 if __name__ == '__main__':
     import os
@@ -580,4 +616,4 @@ if __name__ == '__main__':
         PORT = int(os.environ.get('SERVER_PORT', '5555'))
     except ValueError:
         PORT = 5555
-    app.run(HOST, PORT)
+    app.run(HOST, PORT, debug=True)

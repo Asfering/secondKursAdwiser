@@ -47,6 +47,3 @@ def index():
     return render_template("main.html")
 
 
-if __name__ == '__main__':
-    import os
-    app.run(debug=True)
