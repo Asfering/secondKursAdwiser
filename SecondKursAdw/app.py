@@ -419,6 +419,7 @@ def checkonwarnings(user_id):
     rea = ""
     sea = ""
     comments=""
+
     if request.method == "POST":
         if len(request.form['sea']) > 10:  # простая проверка
             sea = request.form['sea']
@@ -427,8 +428,8 @@ def checkonwarnings(user_id):
             gradeRandom = random.randint(1, 10)  # как заглушка, встанет адвайзер
         else:
             flash("Длина исходного текста меньше 10 символов")  # Сообщение пользователю
-    return render_template("checkonwarnings.html", title="Проверить эссе", grade=gradeRandom, rea=rea, sea=sea,
-                           user_id=current_user.get_id(), comments=comments)
+    return render_template("checkonwarnings.html",  title="Проверить эссе", grade=gradeRandom, rea=rea, sea=sea,
+                           user_id=current_user.get_id())
 
 
 def CreateEssayResponce(user_id, post_id, stdResponce):
@@ -593,16 +594,16 @@ def annotate_print(text):
     for k, token in enumerate(tokens_soup):
         entry = ""
         if token[1] == 1:
-            entry += '<div class="duo"'
+            entry += '<span class="stylesomethingnew"'
             if "comment"+str(k) in comments:
-                entry += ' id="' + "comment"+str(k) + 'link"'
-                entry += ' onclick="popupbox(event,'
-                entry += "'" + "comment"+str(k) + "'" + ')">'
+                entry += ' id="' + "comment"+str(k) + 'link">'
+                #entry += ' onclick="popupbox(event,'
+                #entry += "'" + "comment"+str(k) + "'" + ')">'
             else:
             	entry += '>'
         entry += token[0]
         if token[1] == 1:
-            entry += '</div>'
+            entry += '</span>'
         text = text.replace(chr(8), entry, 1)
     text = text.replace("\n", "<br>")
     return text, comments
