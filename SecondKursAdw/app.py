@@ -418,6 +418,7 @@ def checkonwarnings(user_id):
     gradeRandom = 0
     rea = ""
     sea = ""
+    comments=""
     if request.method == "POST":
         if len(request.form['sea']) > 10:  # простая проверка
             sea = request.form['sea']
@@ -427,7 +428,7 @@ def checkonwarnings(user_id):
         else:
             flash("Длина исходного текста меньше 10 символов")  # Сообщение пользователю
     return render_template("checkonwarnings.html", title="Проверить эссе", grade=gradeRandom, rea=rea, sea=sea,
-                           user_id=current_user.get_id())
+                           user_id=current_user.get_id(), comments=comments)
 
 
 def CreateEssayResponce(user_id, post_id, stdResponce):
