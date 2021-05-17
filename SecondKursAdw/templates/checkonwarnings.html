@@ -6,13 +6,17 @@
 <div style="text-align:center; background-color:#DCDCDC;" >
 <h1 class="h3 mb-3 fw-normal">Ввод текста в область ниже</h1>
 
-<p><textarea name="sea"rows=14 cols=100>{{sea}}</textarea></p>
+<p><textarea name="sea" rows=14 cols=200>{{sea}}</textarea></p>
 </div>
     <div style="text-align:left; background-color:#DCDCDC;">
 <div id="resulta">{{ rea }}</div>
-<p>Оценка: {{grade}}</p>
+        {% if tf %}
+            <p>Оценка: {{grade}}</p>
+        {% endif %}
+    </div>
+    <div style="text-align:center; background-color:#DCDCDC;" >
 <input type="submit" value="Добавить ответ на задание" class="btn btn-lg btn-success " />
 <a href = "{{url_for('profile', user_id = current_user.get_id())}}" class="btn btn-lg btn-secondary">Назад в профиль</a>
-</div>
+    </div>
 </form>
 {% endblock %}

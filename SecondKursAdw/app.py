@@ -359,9 +359,9 @@ def profile(user_id):
                                    role=role)
 
         return render_template("profilestd.html", title=f"Профиль - {nameOfUser}", nameOfStudent=nameOfUser,
-                               tasksBeforeDeadline=fDataBase.getTaskBeforeDeadline(mainCursor, current_user.get_id()), \
+                               tasksBeforeDeadline=fDataBase.getTaskBeforeDeadline(mainCursor, current_user.id_of_student(mainCursor)), \
                                role=role,
-                               tasksAfterDeadline=fDataBase.getTaskAfterDeadline(mainCursor, current_user.get_id()))
+                               tasksAfterDeadline=fDataBase.getTaskAfterDeadline(mainCursor, current_user.id_of_student(mainCursor)))
 
     elif current_user.is_professor(mainCursor):  # Если преподаватель
         nameOfUser = current_user.name_of_professor(mainCursor)
@@ -399,10 +399,12 @@ def showTask(user_id, id_post):
         if fDataBase.isEssayFromDB(mainCursor, id_post, current_user.get_id()):
             studentEssayArea, resultEssayArea, gradeEssay, commentEssay, dateOfUploadEssay = fDataBase.getEssayFromDB(
                 mainCursor, id_post, current_user.get_id())  # получаем эссе из бд
+            rea, comments = annotate_print(studentEssayArea)
+            rea = Markup(rea)
             eu = True  # если эссе уже есть в бд, то eu = true
             return render_template("task.html", title=title, task=task, DateOfBeginHTML=DateOfBegin,
                                    DateOfEndHTML=DateOfEnd, professorHTML=professor, tf=tf, sea=studentEssayArea, \
-                                   rea=resultEssayArea, ge=gradeEssay, ce=commentEssay, doue=dateOfUploadEssay, eu=eu,
+                                   rea=rea, ge=gradeEssay, ce=commentEssay, doue=dateOfUploadEssay, eu=eu,
                                    post=id_post)  # получаем страницу
     else:
         flash("У вас нет прав доступа к данной странице", "error")  # Сообщение пользователю
@@ -418,17 +420,19 @@ def checkonwarnings(user_id):
     gradeRandom = 0
     rea = ""
     sea = ""
-    comments=""
+    comments = ""
+    tf = False
 
     if request.method == "POST":
         if len(request.form['sea']) > 10:  # простая проверка
             sea = request.form['sea']
             rea, comments = annotate_print(sea)
-            rea = Markup(rea)  # как заглушка, встанет адвайзер
+            rea = Markup(rea)
             gradeRandom = random.randint(1, 10)  # как заглушка, встанет адвайзер
+            tf=True
         else:
             flash("Длина исходного текста меньше 10 символов")  # Сообщение пользователю
-    return render_template("checkonwarnings.html",  title="Проверить эссе", grade=gradeRandom, rea=rea, sea=sea,
+    return render_template("checkonwarnings.html",  title="Проверить эссе", tf = tf, grade=gradeRandom, rea=rea, sea=sea,
                            user_id=current_user.get_id())
 
 
@@ -436,14 +440,16 @@ def CreateEssayResponce(user_id, post_id, stdResponce):
     '''Добавление ответа студента на задание препода в БД'''
     try:
         # Пока стоят заглушки (оценка, результат)
-        gradeRandom = random.randint(1, 10)
+        gradeRandom = random.randint(1, 10) # как заглушка, встанет адвайзер
+        stdResponce = stdResponce.replace("'", '"')
         # добавление записи в бд
         mainCursor.execute("SET IDENTITY_INSERT Essay ON")
         mainCursor.execute(f"Insert into Essay(EssayID, WorkID, UserID, StudentEssay, ResultEssay, Grade, Comment, DateOfUpload) \
-        VALUES ((SELECT COUNT(Essay.EssayID) from Essay)+3, {post_id}, {user_id}, '{stdResponce}', '{stdResponce}2', {gradeRandom}, NULL, GETDATE())")
+        VALUES ((SELECT COUNT(Essay.EssayID) from Essay)+3, {post_id}, {user_id}, '{stdResponce}', '{stdResponce}', {gradeRandom}, NULL, GETDATE())")
         mainCursor.execute("SET IDENTITY_INSERT Essay OFF")
 
-        # Работаем с таблицей "Recording(listOfLists, numberOfIteration)"
+
+        #Работаем с таблицей "Recording(listOfLists, numberOfIteration)"
         mainCursor.execute("SELECT COUNT(Essay.EssayID) from Essay")
         count = mainCursor.fetchone()
         count[0] = count[0] + 2
@@ -509,7 +515,10 @@ def ShowEssays(post_id, user_id, student_id):
     wkTask = ""
     if current_user.is_professor(mainCursor):  # если пользователь препод
         stdEssay, rslEssay, grdEssay, comEssay, douEssay, wkTask = fDataBase.getMainInfoEssay(post_id, student_id,
-                                                                                              mainCursor)  # получаем данные по эссе
+                                                                                           mainCursor)  # получаем данные по эссе
+        rea, comments = annotate_print(rslEssay)
+        rea = Markup(rea)
+
         titleOfEssay = fDataBase.getEssayWorkName(mainCursor, current_user.id_of_professor(mainCursor), post_id)
         if request.method == "POST":
             if len(request.form['comment']) > 2:  # процесс добавление комментария. минимум 2 знака.
@@ -524,7 +533,7 @@ def ShowEssays(post_id, user_id, student_id):
         flash("У вас нет прав доступа к данной странице", "error")  # Сообщение пользователю
         return redirect(url_for('login'))
     return render_template("essay.html", title=f"Ответ к заданию {titleOfEssay}", task=wkTask, essay=stdEssay,
-                           result=rslEssay, titleEs=titleOfEssay, grade=grdEssay, dateOfUpload=douEssay,
+                           result=rea, titleEs=titleOfEssay, grade=grdEssay, dateOfUpload=douEssay,
                            comment=comEssay, post=post_id, student=student_id)
 
 

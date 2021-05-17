@@ -54,6 +54,19 @@ class UserLogin(UserMixin):
             print("Ошибка получения данных из БД - is_student")
         return False
 
+    def id_of_student(self, mainCursor):
+        '''Функция получения ID преподавателя'''
+        try:
+            mainCursor.execute(f"select Students.StudentID FROM Students Inner join Users on Users.UserID = Students.UserID WHERE Users.UserID = {self.get_id()} ")
+            res = mainCursor.fetchone()
+            if not res:
+                print("Пользователь не найден - id_of_student")
+                return False
+            return res[0]
+        except:
+            print("Ошибка получения данных из БД - id_of_student")
+        return False
+
     def id_of_professor(self, mainCursor):
         '''Функция получения ID преподавателя'''
         try:

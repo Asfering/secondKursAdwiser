@@ -84,7 +84,7 @@ src: url(./ptserif.ttf);
 body {
 	font-family: PT Sans, sans-serif;
 	overflow: hidden;
-	color: #3c4752;
+	color: #fff6d4;
 }
 main, footer {
 	background: white;

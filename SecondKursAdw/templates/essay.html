@@ -7,8 +7,10 @@
     <h1 class="h2 mb-3 fw-normal">Задание "{{titleEs}}" и ответ</h1>
     <h2 class="h4 mb-3 fw-normal">Текст задания:</h2>
     <p class="h5 mb-3 fw-normal">{{task}}</p>
-<p><textarea name="task"rows=15 cols=131 readonly>{{essay}}</textarea> &nbsp;
-<textarea name="result"rows=15 cols=131 readonly>{{result}}</textarea></p>
+<p><textarea name="task"rows=15 cols=262 readonly>{{essay}}</textarea> &nbsp;
+     <div style="text-align:left; background-color:#DCDCDC;">
+<div id="resulta">{{ result }}</div>
+    </div>
 <h2 class="h4 mb-3 fw-normal">Оценка: {{grade}}</h2>
 <h2 class="h4 mb-3 fw-normal">Дата загрузки: {{dateOfUpload}}</h2>
 <h2 class="h4 mb-3 fw-normal">Комментарий: </h2> <h6><textarea name = "comment" class="h4 mb-3 fw-normal" rows=1, cols=50>{{comment}}</textarea></h6>
