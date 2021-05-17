@@ -55,7 +55,7 @@ class UserLogin(UserMixin):
         return False
 
     def id_of_student(self, mainCursor):
-        '''Функция получения ID преподавателя'''
+        '''Функция получения ID студента'''
         try:
             mainCursor.execute(f"select Students.StudentID FROM Students Inner join Users on Users.UserID = Students.UserID WHERE Users.UserID = {self.get_id()} ")
             res = mainCursor.fetchone()
